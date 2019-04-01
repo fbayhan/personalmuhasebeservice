@@ -23,15 +23,21 @@ public class UserController {
 	@Autowired
 	private InMemoryUserDetailsManager userManager;
 
-	@GetMapping(path="/", produces = "application/json")
+	@GetMapping(path = "/", produces = "application/json")
 	public String greeting() {
 		return "Spring Security In-memory Authentication Example";
-	} 
+	}
 
 	@PostMapping("/saveuser")
 	public User insertUser(@Valid @RequestBody User user) {
 		return userRepository.save(user);
-	} 
-	
-	
+	}
+
+	@GetMapping("/userdenemesi")
+	public User findByUserName()
+	{
+		System.out.println("Test test");
+		return userRepository.findByUserNameHQL("test");
+	}
+
 }

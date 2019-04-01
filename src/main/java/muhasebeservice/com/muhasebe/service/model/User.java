@@ -3,31 +3,38 @@ package muhasebeservice.com.muhasebe.service.model;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.JoinColumn;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import javax.persistence.ManyToMany;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @Entity
 @Table(name = "users")
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = { "createdAt", "updatedAt" }, allowGetters = true)
-public class User {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class User implements UserDetails {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,8 +44,8 @@ public class User {
 	private String userName;
 
 	@NotBlank
-	private String pass;
-	
+	private String password;
+
 	@Column(nullable = false, updatable = false)
 	private String email;
 
@@ -52,49 +59,51 @@ public class User {
 	@LastModifiedDate
 	private Date updatedAt;
 
-	@ManyToMany(cascade = CascadeType.MERGE)
-	@JoinTable(name = "user_role", joinColumns = {
-			@JoinColumn(name = "USER_ID", referencedColumnName = "ID") }, inverseJoinColumns = {
-					@JoinColumn(name = "ROLE_ID", referencedColumnName = "ID") })
-	private List<Role> roles;
+	@ElementCollection(fetch = FetchType.EAGER)
+	@Builder.Default
+	private List<String> roles = new ArrayList<>();
 
-	public Long getId() {
-		return id;
+	// burası benim kodum olması gereken
+	// @ManyToMany(cascade = CascadeType.MERGE)
+	// @JoinTable(name = "user_role", joinColumns = {
+	// @JoinColumn(name = "USER_ID", referencedColumnName = "ID") },
+	// inverseJoinColumns = {
+	// @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID") })
+	// private List<Role> roles;
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return this.roles.stream().map(SimpleGrantedAuthority::new).collect(toList());
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	@Override
+	public String getPassword() {
+		return this.password;
 	}
 
-	public String getUserName() {
-		return userName;
+	@Override
+	public String getUsername() {
+		return this.userName;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
 	}
 
-	public String getPass() {
-		return pass;
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
 	}
 
-	public void setPass(String pass) {
-		this.pass = pass;
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
 	}
 
-	public Date getCreatedAt() {
-		return createdAt;
+	@Override
+	public boolean isEnabled() {
+		return true;
 	}
 
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public Date getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(Date updatedAt) {
-		this.updatedAt = updatedAt;
-	}
 }
