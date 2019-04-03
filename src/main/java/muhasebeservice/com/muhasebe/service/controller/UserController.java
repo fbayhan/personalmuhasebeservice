@@ -33,11 +33,5 @@ public class UserController {
 		return userRepository.save(user);
 	}
 
-	@GetMapping("/userdenemesi")
-	public User findByUserName()
-	{
-		System.out.println("Test test");
-		return userRepository.findByUserNameHQL("test");
-	}
-
+	 
 }

@@ -1,109 +1,101 @@
 package muhasebeservice.com.muhasebe.service.model;
 
-import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import static java.util.stream.Collectors.toList;
+import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "users")
-@EntityListeners(AuditingEntityListener.class)
-@JsonIgnoreProperties(value = { "createdAt", "updatedAt" }, allowGetters = true)
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class User implements UserDetails {
-
+@Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = { "username" }),
+		@UniqueConstraint(columnNames = { "email" }) })
+public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@NotBlank
-	private String userName;
+	@Size(min = 3, max = 50)
+	private String name;
 
 	@NotBlank
-	private String password;
+	@Size(min = 3, max = 50)
+	private String username;
 
-	@Column(nullable = false, updatable = false)
+	@NaturalId
+	@NotBlank
+	@Size(max = 50)
+	@Email
 	private String email;
 
-	@Column(nullable = false, updatable = false)
-	@Temporal(TemporalType.TIMESTAMP)
-	@CreatedDate
-	private Date createdAt;
+	@NotBlank
+	@Size(min = 6, max = 100)
+	private String password;
 
-	@Column(nullable = false)
-	@Temporal(TemporalType.TIMESTAMP)
-	@LastModifiedDate
-	private Date updatedAt;
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+	private Set<Role> roles = new HashSet<>();
 
-	@ElementCollection(fetch = FetchType.EAGER)
-	@Builder.Default
-	private List<String> roles = new ArrayList<>();
-
-	// burası benim kodum olması gereken
-	// @ManyToMany(cascade = CascadeType.MERGE)
-	// @JoinTable(name = "user_role", joinColumns = {
-	// @JoinColumn(name = "USER_ID", referencedColumnName = "ID") },
-	// inverseJoinColumns = {
-	// @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID") })
-	// private List<Role> roles;
-
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return this.roles.stream().map(SimpleGrantedAuthority::new).collect(toList());
+	public User() {
 	}
 
-	@Override
-	public String getPassword() {
-		return this.password;
+	public User(String name, String username, String email, String password) {
+		this.name = name;
+		this.username = username;
+		this.email = email;
+		this.password = password;
 	}
 
-	@Override
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public String getUsername() {
-		return this.userName;
+		return username;
 	}
 
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
+	public String getName() {
+		return name;
 	}
 
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	@Override
-	public boolean isEnabled() {
-		return true;
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
 	}
 
 }
