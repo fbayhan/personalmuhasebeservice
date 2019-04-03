@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
  
 import muhasebeservice.com.muhasebe.service.model.Deneme;
+import muhasebeservice.com.muhasebe.service.model.Vehicle;
 import muhasebeservice.com.muhasebe.service.repository.DenemeRepository;
+import muhasebeservice.com.muhasebe.service.repository.VehicleRepository;
 
 @RestController
 @RequestMapping("/service")
@@ -21,9 +23,13 @@ public class DenemeController {
 
 	@Autowired
 	DenemeRepository denemeRepository;
+	
+	@Autowired 
+	VehicleRepository vehicleRepository;
 
 	@GetMapping("/denemes")
 	public List<Deneme> getAllDenemes() {
+	 
 		return denemeRepository.findAll();
 	}
 
