@@ -18,8 +18,6 @@ import muhasebeservice.com.security.jwt.JwtAuthEntryPoint;
 import muhasebeservice.com.security.jwt.JwtAuthTokenFilter;
 import muhasebeservice.com.service.UserDetailsServiceImpl;
 
- 
-
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)

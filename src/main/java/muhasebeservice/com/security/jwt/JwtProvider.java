@@ -2,29 +2,23 @@ package muhasebeservice.com.security.jwt;
 
 import java.util.Date;
 
+import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
- 
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
-import io.jsonwebtoken.UnsupportedJwtException;
 import muhasebeservice.com.service.UserPrinciple;
 
 @Component
 public class JwtProvider {
 	private static final Logger logger = LoggerFactory.getLogger(JwtProvider.class);
 
-	@Value("${grokonez.app.jwtSecret}")
+	@Value("${muhasebeservice.com.app.jwtSecret}")
 	private String jwtSecret;
 
-	@Value("${grokonez.app.jwtExpiration}")
+	@Value("${muhasebeservice.com.app.jwtExpiration}")
 	private int jwtExpiration;
 
 	public String generateJwtToken(Authentication authentication) {
