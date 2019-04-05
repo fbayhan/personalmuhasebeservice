@@ -1,12 +1,20 @@
 package muhasebeservice.com.model;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "wages")
@@ -20,6 +28,50 @@ public class Wage {
 	private int wageDay;
 
 	private String tip;
+
+	@CreationTimestamp
+	private LocalDateTime createDateTime;
+
+	@UpdateTimestamp
+	private LocalDateTime updateDateTime;
+
+	private Boolean isAktive;
+
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "userid")
+	private User user;
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Boolean getIsAktive() {
+		return isAktive;
+	}
+
+	public void setIsAktive(Boolean isAktive) {
+		this.isAktive = isAktive;
+	}
+
+	public LocalDateTime getCreateDateTime() {
+		return createDateTime;
+	}
+
+	public void setCreateDateTime(LocalDateTime createDateTime) {
+		this.createDateTime = createDateTime;
+	}
+
+	public LocalDateTime getUpdateDateTime() {
+		return updateDateTime;
+	}
+
+	public void setUpdateDateTime(LocalDateTime updateDateTime) {
+		this.updateDateTime = updateDateTime;
+	}
 
 	public Long getId() {
 		return id;
@@ -36,8 +88,6 @@ public class Wage {
 	public void setSalary(int salary) {
 		this.salary = salary;
 	}
-
-	 
 
 	public int getWageDay() {
 		return wageDay;

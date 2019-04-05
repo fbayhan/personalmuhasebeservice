@@ -10,12 +10,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import muhasebeservice.com.model.User;
 import muhasebeservice.com.model.Wage;
+import muhasebeservice.com.repository.CustomizedWageRepository;
 import muhasebeservice.com.repository.UserRepository;
+import muhasebeservice.com.repository.WageRepository;
 
 @RestController
 public class TestRestAPIs {
 	@Autowired
 	UserRepository userRepository;
+
+	@Autowired
+	CustomizedWageRepository customizedWageRepository;
+
+	@Autowired
+	WageRepository wageRepository;
 
 	@GetMapping("/api/test/user")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
@@ -55,15 +63,20 @@ public class TestRestAPIs {
 		wage.setWageDay(7);
 		Optional<User> randomUser = userRepository.findById(3L);
 		randomUser.ifPresent(user -> {
-			user.getWages().add(wage);
-
+			// user.getWages();
 		});
 
 		randomUser.ifPresent(user -> {
 			System.out.println("Çalışıyor sanırım");
-			userRepository.save(user);			
+			userRepository.save(user);
 		});
 		return userRepository.findById(3L);
+	}
+
+	@GetMapping("/api/everyone/wages")
+	public List<Wage> wages() {
+
+		return customizedWageRepository.getRandomWage();
 	}
 
 }

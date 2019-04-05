@@ -1,9 +1,11 @@
 package muhasebeservice.com.model;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -12,13 +14,16 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = { "username" }),
@@ -50,12 +55,19 @@ public class User {
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-        })
-	@JoinTable(name = "user_wages", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "wage_id"))
-	private Set<Wage> wages = new HashSet<>();
+	// @ManyToMany(fetch = FetchType.LAZY)
+	// @JoinTable(name = "user_wages", joinColumns = @JoinColumn(name = "user_id"),
+	// inverseJoinColumns = @JoinColumn(name = "wage_id"))
+	// private Set<Wage> wages = new HashSet<>();
+
+	@CreationTimestamp
+	private LocalDateTime createDateTime;
+
+	@UpdateTimestamp
+	private LocalDateTime updateDateTime;
+
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL)
+	private Set<Wage> wages;
 
 	public User() {
 	}
@@ -113,6 +125,22 @@ public class User {
 
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
+	}
+
+	public LocalDateTime getCreateDateTime() {
+		return createDateTime;
+	}
+
+	public void setCreateDateTime(LocalDateTime createDateTime) {
+		this.createDateTime = createDateTime;
+	}
+
+	public LocalDateTime getUpdateDateTime() {
+		return updateDateTime;
+	}
+
+	public void setUpdateDateTime(LocalDateTime updateDateTime) {
+		this.updateDateTime = updateDateTime;
 	}
 
 	public Set<Wage> getWages() {
