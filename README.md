@@ -53,6 +53,14 @@ localhost:8080/api/auth/signup
 
 }
 
+{ 
+	"name":"fatih",
+	"username":"fatih",
+	"email":"fatih-bayhan@windowslive.com",
+	"role":["user"],
+	"password":"123456" 
+
+}
 
 localhost:8080/api/auth/signin
 {  

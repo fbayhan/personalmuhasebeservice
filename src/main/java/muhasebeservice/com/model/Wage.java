@@ -105,4 +105,11 @@ public class Wage {
 		this.tip = tip;
 	}
 
+	@Override
+	public String toString() {
+		return "Wage [id=" + id + ", salary=" + salary + ", wageDay=" + wageDay + ", tip=" + tip + ", createDateTime="
+				+ createDateTime + ", updateDateTime=" + updateDateTime + ", isAktive=" + isAktive + ", user=" + user
+				+ "]";
+	}
+
 }

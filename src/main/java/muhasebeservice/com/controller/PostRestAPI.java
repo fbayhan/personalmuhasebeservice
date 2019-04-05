@@ -36,11 +36,21 @@ public class PostRestAPI {
 	@PostMapping("/addWageDay")
 	public ResponseEntity<String> addWageDay(@Valid @RequestBody LoggedUserThings loggedUserThings) {
 		System.out.println("Add Wage Day Çalışıyor " + loggedUserThings.toString());
+		Wage wage = customizedWageRepository.updateUserWageDay(loggedUserThings.getId(),
+				loggedUserThings.getDayOfWage());
 
-		Optional<User> user = userRepository.findById(loggedUserThings.getId());
-		user.ifPresent(currentUser -> {
-			Wage usersWageProperties;
-		});
+		System.out.println(wage.toString());
+
+		return ResponseEntity.ok().body("Wage has been added!");
+	}
+	
+	@PostMapping("/addsalary")
+	public ResponseEntity<String> addSalary(@Valid @RequestBody LoggedUserThings loggedUserThings) {
+		System.out.println("Add Wage Day Çalışıyor " + loggedUserThings.toString());
+		Wage wage = customizedWageRepository.updateUserSalary(loggedUserThings.getId(),
+				loggedUserThings.getDayOfWage());
+
+		System.out.println(wage.toString());
 
 		return ResponseEntity.ok().body("Wage has been added!");
 	}

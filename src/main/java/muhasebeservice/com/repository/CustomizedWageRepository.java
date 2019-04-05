@@ -2,11 +2,13 @@ package muhasebeservice.com.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import muhasebeservice.com.model.User;
@@ -17,6 +19,12 @@ public class CustomizedWageRepository {
 	@PersistenceContext
 	EntityManager entityManager;
 
+	@Autowired
+	WageRepository wageRepository;
+
+	@Autowired
+	UserRepository userRepository;
+
 	public List<Wage> getRandomWage() {
 
 		List<Wage> wageList = new ArrayList<>();
@@ -25,14 +33,68 @@ public class CustomizedWageRepository {
 
 	}
 
-	public Wage getUsersWageProperties(Long userId) {
-		Wage wage = new Wage();
-		Query query = entityManager.createQuery("From User where id=:userid").setParameter("userid", userId);
-		User user = (User) query.getResultList().get(0);
-		System.out.println("Get user çalışıyor");
+	public Wage updateUserWageDay(Long userId, int day) {
 
-		System.out.println(user.getName());
-		return wage;
+		int isRecordExist = entityManager
+				.createQuery("From Wage where userid=:userid and isAktive=true order by updateDateTime desc")
+				.setParameter("userid", userId).getResultList().size();
+		if (isRecordExist > 0) {
+			System.out.println("Var");
+			Query wageQuery = entityManager
+					.createQuery("From Wage where userid=:userid and isAktive=true order by updateDateTime desc")
+					.setParameter("userid", userId).setMaxResults(1);
+
+			Wage wage = (Wage) wageQuery.getResultList().get(0);
+			wage.setWageDay(day);
+			System.out.println("Wage Son çalışıyor");
+			System.out.println(wage.toString());
+			wageRepository.save(wage);
+			return wage;
+		} else {
+			System.out.println("yokmuş burası çalışıyor");
+			Wage wage = new Wage();
+			wage.setIsAktive(true);
+			wage.setWageDay(day);
+			Optional<User> user = userRepository.findById(userId);
+
+			user.ifPresent(currentUser -> {
+				wage.setUser(currentUser);
+				wageRepository.save(wage);
+			});
+			return wage;
+		}
+	}
+
+	public Wage updateUserSalary(Long userId, int salary) {
+
+		int isRecordExist = entityManager
+				.createQuery("From Wage where userid=:userid and isAktive=true order by updateDateTime desc")
+				.setParameter("userid", userId).getResultList().size();
+		if (isRecordExist > 0) {
+			System.out.println("Var");
+			Query wageQuery = entityManager
+					.createQuery("From Wage where userid=:userid and isAktive=true order by updateDateTime desc")
+					.setParameter("userid", userId).setMaxResults(1);
+
+			Wage wage = (Wage) wageQuery.getResultList().get(0);
+			wage.setSalary(salary);
+			System.out.println("Wage Son çalışıyor");
+			System.out.println(wage.toString());
+			wageRepository.save(wage);
+			return wage;
+		} else {
+			System.out.println("yokmuş burası çalışıyor");
+			Wage wage = new Wage();
+			wage.setIsAktive(true);
+			wage.setSalary(salary);
+			Optional<User> user = userRepository.findById(userId);
+
+			user.ifPresent(currentUser -> {
+				wage.setUser(currentUser);
+				wageRepository.save(wage);
+			});
+			return wage;
+		}
 
 	}
 
