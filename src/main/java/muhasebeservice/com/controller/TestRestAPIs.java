@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import muhasebeservice.com.dto.UserPropertiesDTO;
 import muhasebeservice.com.model.User;
 import muhasebeservice.com.model.Wage;
 import muhasebeservice.com.repository.CustomizedWageRepository;
@@ -24,6 +25,8 @@ public class TestRestAPIs {
 
 	@Autowired
 	WageRepository wageRepository;
+
+	MoneyTalks moneyTalks = new MoneyTalks();
 
 	@GetMapping("/api/test/user")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
@@ -75,6 +78,9 @@ public class TestRestAPIs {
 
 	@GetMapping("/api/everyone/wages")
 	public List<Wage> wages() {
+		System.out.println("bakalım ne gelecek 1 " );
+		UserPropertiesDTO userPropertiesDTO = moneyTalks.calculateUserDetails(4L);
+		System.out.println("bakalım ne gelecek" + userPropertiesDTO.toString());
 
 		return customizedWageRepository.getRandomWage();
 	}

@@ -1,6 +1,6 @@
 package muhasebeservice.com.dto;
 
-public class LoggedUserThings {
+public class LoggedUserThingsDTO {
 
 	private Long id;
 	private int dayOfWage;

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import muhasebeservice.com.dto.LoggedUserThings;
+import muhasebeservice.com.dto.LoggedUserThingsDTO;
 import muhasebeservice.com.model.User;
 import muhasebeservice.com.model.Wage;
 import muhasebeservice.com.repository.CustomizedWageRepository;
@@ -34,7 +34,7 @@ public class PostRestAPI {
 	CustomizedWageRepository customizedWageRepository;
 
 	@PostMapping("/addWageDay")
-	public ResponseEntity<String> addWageDay(@Valid @RequestBody LoggedUserThings loggedUserThings) {
+	public ResponseEntity<String> addWageDay(@Valid @RequestBody LoggedUserThingsDTO loggedUserThings) {
 		System.out.println("Add Wage Day Çalışıyor " + loggedUserThings.toString());
 		Wage wage = customizedWageRepository.updateUserWageDay(loggedUserThings.getId(),
 				loggedUserThings.getDayOfWage());
@@ -45,7 +45,7 @@ public class PostRestAPI {
 	}
 	
 	@PostMapping("/addsalary")
-	public ResponseEntity<String> addSalary(@Valid @RequestBody LoggedUserThings loggedUserThings) {
+	public ResponseEntity<String> addSalary(@Valid @RequestBody LoggedUserThingsDTO loggedUserThings) {
 		System.out.println("Add Wage Day Çalışıyor " + loggedUserThings.toString());
 		Wage wage = customizedWageRepository.updateUserSalary(loggedUserThings.getId(),
 				loggedUserThings.getDayOfWage());
