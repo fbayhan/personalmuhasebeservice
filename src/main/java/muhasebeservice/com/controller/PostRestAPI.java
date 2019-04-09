@@ -43,12 +43,11 @@ public class PostRestAPI {
 
 		return ResponseEntity.ok().body("Wage has been added!");
 	}
-	
+
 	@PostMapping("/addsalary")
 	public ResponseEntity<String> addSalary(@Valid @RequestBody LoggedUserThingsDTO loggedUserThings) {
 		System.out.println("Add Wage Day Çalışıyor " + loggedUserThings.toString());
-		Wage wage = customizedWageRepository.updateUserSalary(loggedUserThings.getId(),
-				loggedUserThings.getDayOfWage());
+		Wage wage = customizedWageRepository.updateUserSalary(loggedUserThings.getId(), loggedUserThings.getSalary());
 
 		System.out.println(wage.toString());
 

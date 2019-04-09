@@ -4,6 +4,25 @@ public class LoggedUserThingsDTO {
 
 	private Long id;
 	private int dayOfWage;
+	private int salary;
+
+	private String userName;
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public int getSalary() {
+		return salary;
+	}
+
+	public void setSalary(int salary) {
+		this.salary = salary;
+	}
 
 	public Long getId() {
 		return id;
@@ -23,7 +42,8 @@ public class LoggedUserThingsDTO {
 
 	@Override
 	public String toString() {
-		return "LoggedUserThings [id=" + id + ", dayOfWage=" + dayOfWage + "]";
+		return "LoggedUserThingsDTO [id=" + id + ", dayOfWage=" + dayOfWage + ", salary=" + salary + ", userName="
+				+ userName + "]";
 	}
 
 }

@@ -66,9 +66,6 @@ public class User {
 	@UpdateTimestamp
 	private LocalDateTime updateDateTime;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL)
-	private Set<Wage> wages;
-
 	public User() {
 	}
 
@@ -141,14 +138,6 @@ public class User {
 
 	public void setUpdateDateTime(LocalDateTime updateDateTime) {
 		this.updateDateTime = updateDateTime;
-	}
-
-	public Set<Wage> getWages() {
-		return wages;
-	}
-
-	public void setWages(Set<Wage> wages) {
-		this.wages = wages;
 	}
 
 }

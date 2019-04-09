@@ -87,6 +87,22 @@ localhost:8080/api/test/pm
 
 
 
+localhost:8080/api/everyone/addWageDay
+
+{ 
+ "id": "4",
+ "dayOfWage": "7"
+
+}
+
+
+
+
+
+
+
+
+
 
 
 

@@ -11,6 +11,7 @@ import javax.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import muhasebeservice.com.dto.UserPropertiesDTO;
 import muhasebeservice.com.model.User;
 import muhasebeservice.com.model.Wage;
 
@@ -26,8 +27,7 @@ public class CustomizedWageRepository {
 	UserRepository userRepository;
 
 	public List<Wage> getRandomWage() {
-
-		List<Wage> wageList = new ArrayList<>();
+ 
 		Query query = entityManager.createQuery("From Wage");
 		return query.getResultList();
 
@@ -96,6 +96,37 @@ public class CustomizedWageRepository {
 			return wage;
 		}
 
+	}
+
+	public UserPropertiesDTO calculateUserDetails(Long userId) {
+
+		UserPropertiesDTO userPropertiesDTO = new UserPropertiesDTO();
+		Optional<User> user = userRepository.findById(userId);
+
+		user.ifPresent(currentUser -> {
+			userPropertiesDTO.setUserId(userId);
+			userPropertiesDTO.setUserName(currentUser.getUsername());
+
+		});
+
+		int isRecordExist = entityManager
+				.createQuery("From Wage where userid=:userid and isAktive=true order by updateDateTime desc")
+				.setParameter("userid", userId).getResultList().size();
+		if (isRecordExist > 0) {
+			System.out.println("Var");
+			Query wageQuery = entityManager
+					.createQuery("From Wage where userid=:userid and isAktive=true order by updateDateTime desc")
+					.setParameter("userid", userId).setMaxResults(1);
+
+			Wage wage = (Wage) wageQuery.getResultList().get(0);
+			userPropertiesDTO.setNextWageDay(wage.getWageDay());
+			userPropertiesDTO.setWage(wage.getSalary());
+
+		}
+
+		System.out.println("user properties dto çalışıyor, veeee ");
+		System.out.println(userPropertiesDTO.toString());
+		return userPropertiesDTO;
 	}
 
 }

@@ -7,11 +7,11 @@ package muhasebeservice.com.dto;
 public class UserPropertiesDTO {
 
 	private Long userId;
+	private String userName;
 	private int nextWageDay;
 	private int dayToWage;
 	private int wage;
 	private int moneyPerDay;
-	private String userName;
 
 	public Long getUserId() {
 		return userId;

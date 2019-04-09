@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import muhasebeservice.com.calculator.Calculator;
 import muhasebeservice.com.dto.UserPropertiesDTO;
 import muhasebeservice.com.model.User;
 import muhasebeservice.com.model.Wage;
@@ -78,10 +79,24 @@ public class TestRestAPIs {
 
 	@GetMapping("/api/everyone/wages")
 	public List<Wage> wages() {
-		System.out.println("bakalım ne gelecek 1 " );
-		UserPropertiesDTO userPropertiesDTO = moneyTalks.calculateUserDetails(4L);
+		Long userId = 4L;
+		UserPropertiesDTO userPropertiesDTO = customizedWageRepository.calculateUserDetails(userId);
+		Optional<User> user = userRepository.findById(userId);
+
+		user.ifPresent(currentUser -> {
+
+		});
+
 		System.out.println("bakalım ne gelecek" + userPropertiesDTO.toString());
 
+		Calculator calculator = new Calculator();
+		int daysToWage = calculator.daysToWage(userPropertiesDTO.getNextWageDay());
+		System.out.println("Days to wage çıktısı :" + daysToWage);
+		userPropertiesDTO.setDayToWage(daysToWage);
+
+		int moneyPerDay = userPropertiesDTO.getWage() / userPropertiesDTO.getDayToWage();
+		userPropertiesDTO.setMoneyPerDay(moneyPerDay);
+		System.out.println(userPropertiesDTO.toString());
 		return customizedWageRepository.getRandomWage();
 	}
 
